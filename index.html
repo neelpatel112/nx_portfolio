@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neelkumar Patel | 3D Portfolio</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loader-3d">
+            <div class="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="loading-text" id="loading-text">INITIALIZING 3D ENGINE...</div>
+        <div class="loading-subtext">Creating immersive experience</div>
+    </div>
+
+    <!-- UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Navigation Dots -->
+        <div class="nav-dots">
+            <div class="nav-dot active" data-section="hero"></div>
+            <div class="nav-dot" data-section="skills"></div>
+            <div class="nav-dot" data-section="projects"></div>
+            <div class="nav-dot" data-section="certifications"></div>
+            <div class="nav-dot" data-section="contact"></div>
+        </div>
+
+        <!-- Section Labels (populated by JS) -->
+        <div class="section-labels"></div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">NP<span class="logo-dot">.</span></div>
+            <nav class="desktop-nav">
+                <a href="#" data-section="hero">Home</a>
+                <a href="#" data-section="skills">Skills</a>
+                <a href="#" data-section="projects">Projects</a>
+                <a href="#" data-section="certifications">Certs</a>
+                <a href="#" data-section="contact">Contact</a>
+            </nav>
+            <div class="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu">
+            <a href="#" data-section="hero">Home</a>
+            <a href="#" data-section="skills">Skills</a>
+            <a href="#" data-section="projects">Projects</a>
+            <a href="#" data-section="certifications">Certifications</a>
+            <a href="#" data-section="contact">Contact</a>
+        </div>
+
+        <!-- Project Modal -->
+        <div class="modal" id="project-modal">
+            <div class="modal-content">
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+                <h2 id="modal-title">Windows Web 8</h2>
+                <div class="tech-tags" id="modal-tags"></div>
+                <p id="modal-description"></p>
+                <div class="modal-links">
+                    <a href="#" class="btn primary" id="modal-live" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                    <a href="#" class="btn secondary" id="modal-github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Modal -->
+        <div class="modal" id="cert-modal">
+            <div class="modal-content">
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+                <h2 id="cert-title">Computer Networking</h2>
+                <div class="cert-issuer" id="cert-issuer">Cisco Networking Academy</div>
+                <div class="cert-date" id="cert-date">Jan 2026</div>
+                <p id="cert-description"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Three.js Core -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    
+    <!-- Our 3D Modules -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/scene.js"></script>
+    <script type="module" src="js/camera.js"></script>
+    <script type="module" src="js/lights.js"></script>
+    <script type="module" src="js/particles.js"></script>
+    <script type="module" src="js/islands.js"></script>
+    <script type="module" src="js/skills-cube.js"></script>
+    <script type="module" src="js/projects.js"></script>
+    <script type="module" src="js/certifications.js"></script>
+    <script type="module" src="js/contact.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

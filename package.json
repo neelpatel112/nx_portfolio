@@ -1,0 +1,13 @@
+{
+  "name": "neelkumar-3d-portfolio",
+  "version": "1.0.0",
+  "description": "3D Portfolio for Neelkumar Patel",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": ["3d", "portfolio", "three.js"],
+  "author": "Neelkumar Patel",
+  "license": "MIT"
+}
