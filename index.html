@@ -8,41 +8,319 @@
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #4361ee;
+            --accent: #7209b7;
+            --dark: #0a0a0f;
+            --light: #ffffff;
+            --text: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            color: var(--text);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 77, 109, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+            z-index: 101;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--light);
+            text-shadow: 0 0 20px var(--primary);
+        }
+
+        .logo-dot { color: var(--primary); }
+
+        .desktop-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .desktop-nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .desktop-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: var(--light);
+        }
+
+        .desktop-nav a:hover::after,
+        .desktop-nav a.active::after {
+            width: 100%;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: auto;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-dot:hover { background: var(--primary); }
+
+        .nav-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            transform: scale(1.3);
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            pointer-events: auto;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: modalAppear 0.3s;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-tech span {
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .modal p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal-date {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn.primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3);
+        }
+
+        .cert-issuer {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 20px; }
+            .desktop-nav { display: none; }
+            .nav-dots { right: 15px; }
+        }
+    </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loader"></div>
         <div class="loading-text">NEELKUMAR PATEL</div>
-        <div class="loading-subtext">Loading 3D Experience...</div>
     </div>
 
     <!-- UI Overlay -->
     <div class="ui-overlay">
-        <!-- Header -->
         <header class="header">
             <div class="logo">NP<span class="logo-dot">.</span></div>
             <nav class="desktop-nav">
-                <a href="#" data-section="hero">Home</a>
-                <a href="#" data-section="skills">Skills</a>
-                <a href="#" data-section="projects">Projects</a>
-                <a href="#" data-section="certs">Certs</a>
-                <a href="#" data-section="contact">Contact</a>
+                <a data-section="hero">Home</a>
+                <a data-section="skills">Skills</a>
+                <a data-section="projects">Projects</a>
+                <a data-section="certs">Certs</a>
+                <a data-section="contact">Contact</a>
             </nav>
-            <div class="menu-btn">
-                <span></span><span></span><span></span>
-            </div>
         </header>
-
-        <!-- Mobile Menu -->
-        <div class="mobile-menu">
-            <a href="#" data-section="hero">Home</a>
-            <a href="#" data-section="skills">Skills</a>
-            <a href="#" data-section="projects">Projects</a>
-            <a href="#" data-section="certs">Certifications</a>
-            <a href="#" data-section="contact">Contact</a>
-        </div>
 
         <!-- Navigation Dots -->
         <div class="nav-dots">
@@ -74,13 +352,13 @@
                 <button class="modal-close"><i class="fas fa-times"></i></button>
                 <h2 id="certTitle">Certificate Title</h2>
                 <div class="cert-issuer" id="certIssuer"></div>
-                <div class="cert-date" id="certDate"></div>
+                <div class="modal-date" id="certDate"></div>
                 <p id="certDesc"></p>
             </div>
         </div>
     </div>
 
-    <!-- Three.js Import -->
+    <!-- Import Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -93,10 +371,418 @@
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-    <!-- Our JS Files -->
-    <script type="module" src="content.js"></script>
-    <script type="module" src="utils.js"></script>
-    <script type="module" src="ui.js"></script>
-    <script type="module" src="main.js"></script>
+    <!-- ALL JAVASCRIPT IN ONE PLACE -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ========== CONTENT DATA ==========
+        const CONTENT = {
+            name: "Neelkumar Patel",
+            title: "Computer Engineering Student",
+            email: "2403396160351@paruluniversity.ac.in",
+            phone: "+91 9023030288",
+            location: "Vadodara",
+            
+            projects: [
+                {
+                    id: "win8",
+                    title: "Windows Web 8",
+                    description: "Windows 8 in a browser. Features boot screen, login screen, desktop, start menu, apps and complete real-time experience.",
+                    tech: ["HTML5", "CSS3", "SASS", "jQuery"],
+                    date: "Jan 2026 - Mar 2026",
+                    color: "#00a1f1",
+                    live: "#",
+                    github: "#"
+                },
+                {
+                    id: "macos",
+                    title: "macOS Web Emulator",
+                    description: "macOS NX - fully functional web-based clone of macOS desktop environment with draggable windows, dynamic dock, and built-in apps.",
+                    tech: ["HTML5", "CSS3", "JavaScript"],
+                    date: "Jan 2026 - Present",
+                    color: "#ffffff",
+                    live: "#",
+                    github: "#"
+                },
+                {
+                    id: "sound",
+                    title: "Machine Sound Diagnostics",
+                    description: "Machine fault detection system that analyzes sound recordings. Python ML backend with Android app for WAV file analysis.",
+                    tech: ["Python", "Android", "ML", "APIs"],
+                    date: "2025 - Present",
+                    color: "#7209b7",
+                    live: "#",
+                    github: "#"
+                }
+            ],
+            
+            certifications: [
+                {
+                    id: "networking",
+                    title: "Computer Networking",
+                    issuer: "Cisco Networking Academy",
+                    date: "Jan 2026",
+                    description: "Networking Basics covering IP addressing, Ethernet, routers, wireless configuration, and troubleshooting.",
+                    color: "#00b8ff"
+                },
+                {
+                    id: "hardware",
+                    title: "Computer Hardware Basics",
+                    issuer: "Cisco Networking Academy",
+                    date: "Apr 2025",
+                    description: "Computer components, assembly, maintenance, and troubleshooting.",
+                    color: "#ff4d6d"
+                },
+                {
+                    id: "os",
+                    title: "Operating System Basics",
+                    issuer: "Cisco Networking Academy",
+                    date: "Aug 2025",
+                    description: "OS installation, configuration, file systems, and system management.",
+                    color: "#4361ee"
+                }
+            ]
+        };
+
+        // ========== THREE.JS SETUP ==========
+        console.log('🚀 Starting 3D Portfolio...');
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0f);
+        scene.fog = new THREE.FogExp2(0x0a0a0f, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(5, 3, 10);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+        controls.enableZoom = true;
+        controls.target.set(0, 1, 0);
+
+        // ========== LIGHTS ==========
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xfff5e6, 1);
+        dirLight.position.set(5, 10, 7);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        const pinkLight = new THREE.PointLight(0xff4d6d, 1, 20);
+        pinkLight.position.set(-3, 2, 4);
+        scene.add(pinkLight);
+
+        const blueLight = new THREE.PointLight(0x4361ee, 1, 20);
+        blueLight.position.set(4, 1, -3);
+        scene.add(blueLight);
+
+        // ========== PARTICLES ==========
+        const particleCount = 1500;
+        const particleGeo = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            const r = 15 + Math.random() * 20;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            
+            particlePositions[i] = r * Math.sin(phi) * Math.cos(theta);
+            particlePositions[i+1] = r * Math.sin(phi) * Math.sin(theta);
+            particlePositions[i+2] = r * Math.cos(phi);
+        }
+        
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        
+        const particleMat = new THREE.PointsMaterial({
+            color: 0x88aaff,
+            size: 0.08,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        // ========== MAIN ISLAND ==========
+        const mainIsland = new THREE.Group();
+        
+        const baseGeo = new THREE.CylinderGeometry(2.5, 3, 0.4, 32);
+        const baseMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a, emissive: 0x111122 });
+        const base = new THREE.Mesh(baseGeo, baseMat);
+        base.receiveShadow = true;
+        base.castShadow = true;
+        mainIsland.add(base);
+        
+        const crystalGeo = new THREE.OctahedronGeometry(0.8);
+        const crystalMat = new THREE.MeshStandardMaterial({ color: 0xff4d6d, emissive: 0x441122 });
+        const crystal = new THREE.Mesh(crystalGeo, crystalMat);
+        crystal.castShadow = true;
+        crystal.position.y = 1.2;
+        mainIsland.add(crystal);
+        
+        scene.add(mainIsland);
+
+        // ========== FLOATING ISLANDS ==========
+        const islands = [
+            { color: 0xff4d6d, pos: [-4, 0.5, -3], size: 1.5, name: 'skills' },
+            { color: 0x4361ee, pos: [4, 0.8, -2.5], size: 1.8, name: 'projects' },
+            { color: 0x7209b7, pos: [-3, 0.2, -6], size: 1.4, name: 'certs' },
+            { color: 0x4cc9f0, pos: [3.5, 0.4, -5.5], size: 1.3, name: 'contact' }
+        ];
+
+        const islandGroups = [];
+
+        islands.forEach((island) => {
+            const group = new THREE.Group();
+            
+            const geo = new THREE.CylinderGeometry(island.size, island.size * 1.2, 0.3, 16);
+            const mat = new THREE.MeshStandardMaterial({ color: island.color, emissive: island.color, emissiveIntensity: 0.3 });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.receiveShadow = true;
+            mesh.castShadow = true;
+            group.add(mesh);
+            
+            group.position.set(island.pos[0], island.pos[1], island.pos[2]);
+            group.userData = { type: 'island', name: island.name };
+            
+            scene.add(group);
+            islandGroups.push(group);
+        });
+
+        // ========== PROJECT FRAMES ==========
+        const projectIsland = islandGroups.find(g => g.userData.name === 'projects');
+        if (projectIsland) {
+            CONTENT.projects.forEach((project, index) => {
+                const frameGroup = new THREE.Group();
+                
+                // Frame
+                const backGeo = new THREE.BoxGeometry(1.4, 1.2, 0.1);
+                const backMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+                const back = new THREE.Mesh(backGeo, backMat);
+                back.castShadow = true;
+                frameGroup.add(back);
+                
+                // Border
+                const borderGeo = new THREE.BoxGeometry(1.6, 1.4, 0.1);
+                const borderMat = new THREE.MeshStandardMaterial({ color: project.color });
+                const border = new THREE.Mesh(borderGeo, borderMat);
+                border.castShadow = true;
+                frameGroup.add(border);
+                
+                // Position
+                const angle = (index / CONTENT.projects.length) * Math.PI * 2;
+                const radius = 2.2;
+                frameGroup.position.set(
+                    projectIsland.position.x + Math.cos(angle) * radius,
+                    projectIsland.position.y + 1.0,
+                    projectIsland.position.z + Math.sin(angle) * radius
+                );
+                
+                frameGroup.lookAt(projectIsland.position.x, frameGroup.position.y, projectIsland.position.z);
+                frameGroup.userData = { type: 'project', project: project };
+                
+                scene.add(frameGroup);
+            });
+        }
+
+        // ========== CERTIFICATION BADGES ==========
+        const certIsland = islandGroups.find(g => g.userData.name === 'certs');
+        if (certIsland) {
+            CONTENT.certifications.forEach((cert, index) => {
+                const badgeGroup = new THREE.Group();
+                
+                const hexGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 6);
+                const hexMat = new THREE.MeshStandardMaterial({ color: cert.color, emissive: cert.color, emissiveIntensity: 0.4 });
+                const hex = new THREE.Mesh(hexGeo, hexMat);
+                hex.rotation.y = Math.PI / 6;
+                badgeGroup.add(hex);
+                
+                const angle = (index / CONTENT.certifications.length) * Math.PI * 2;
+                const radius = 1.8;
+                badgeGroup.position.set(
+                    certIsland.position.x + Math.cos(angle) * radius,
+                    certIsland.position.y + 1.2,
+                    certIsland.position.z + Math.sin(angle) * radius
+                );
+                
+                badgeGroup.userData = { type: 'cert', cert: cert };
+                scene.add(badgeGroup);
+            });
+        }
+
+        // ========== UI FUNCTIONS ==========
+        function showProjectModal(project) {
+            document.getElementById('modalTitle').textContent = project.title;
+            
+            const techContainer = document.getElementById('modalTech');
+            techContainer.innerHTML = '';
+            project.tech.forEach(tech => {
+                const span = document.createElement('span');
+                span.textContent = tech;
+                techContainer.appendChild(span);
+            });
+            
+            document.getElementById('modalDesc').textContent = project.description;
+            document.getElementById('modalDate').textContent = project.date;
+            document.getElementById('modalLive').href = project.live;
+            document.getElementById('modalGithub').href = project.github;
+            
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        function showCertModal(cert) {
+            document.getElementById('certTitle').textContent = cert.title;
+            document.getElementById('certIssuer').textContent = cert.issuer;
+            document.getElementById('certDate').textContent = cert.date;
+            document.getElementById('certDesc').textContent = cert.description;
+            
+            document.getElementById('certModal').classList.add('active');
+        }
+
+        function closeAllModals() {
+            document.getElementById('projectModal').classList.remove('active');
+            document.getElementById('certModal').classList.remove('active');
+        }
+
+        // ========== CLICK INTERACTION ==========
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        window.addEventListener('click', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const interactiveObjects = [];
+            scene.traverse(obj => {
+                if (obj.userData && (obj.userData.type === 'project' || obj.userData.type === 'cert')) {
+                    interactiveObjects.push(obj);
+                }
+            });
+            
+            const intersects = raycaster.intersectObjects(interactiveObjects);
+            
+            if (intersects.length > 0) {
+                const obj = intersects[0].object;
+                if (obj.userData.type === 'project') {
+                    showProjectModal(obj.userData.project);
+                } else if (obj.userData.type === 'cert') {
+                    showCertModal(obj.userData.cert);
+                }
+            }
+        });
+
+        // ========== NAVIGATION ==========
+        function navigateToSection(section) {
+            document.querySelectorAll('.nav-dot, .desktop-nav a').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.querySelectorAll(`[data-section="${section}"]`).forEach(el => {
+                el.classList.add('active');
+            });
+            
+            const targets = {
+                hero: { x: 0, y: 1, z: 12, tx: 0, ty: 1, tz: 0 },
+                skills: { x: -4, y: 1.5, z: 8, tx: -2, ty: 1, tz: 0 },
+                projects: { x: 4, y: 1.5, z: 8, tx: 2, ty: 1, tz: 0 },
+                certs: { x: -3, y: 1.5, z: 10, tx: -1.5, ty: 1, tz: -2 },
+                contact: { x: 3, y: 1.5, z: 10, tx: 1.5, ty: 1, tz: -1.5 }
+            };
+            
+            const target = targets[section] || targets.hero;
+            
+            controls.autoRotate = false;
+            
+            gsap.to(camera.position, {
+                x: target.x, y: target.y, z: target.z,
+                duration: 1.5,
+                ease: "power2.inOut"
+            });
+            
+            gsap.to(controls.target, {
+                x: target.tx, y: target.ty, z: target.tz,
+                duration: 1.5,
+                ease: "power2.inOut",
+                onUpdate: () => controls.update(),
+                onComplete: () => {
+                    setTimeout(() => { controls.autoRotate = true; }, 3000);
+                }
+            });
+        }
+
+        // Bind navigation events
+        document.querySelectorAll('[data-section]').forEach(el => {
+            el.addEventListener('click', () => {
+                navigateToSection(el.dataset.section);
+            });
+        });
+
+        // Modal close buttons
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', closeAllModals);
+        });
+
+        // Close modals on background click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeAllModals();
+            });
+        });
+
+        // ========== HIDE LOADING ==========
+        setTimeout(() => {
+            gsap.to('#loadingScreen', {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }
+            });
+        }, 2000);
+
+        // ========== ANIMATION LOOP ==========
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            crystal.rotation.y += 0.01;
+            crystal.rotation.x += 0.005;
+            
+            islandGroups.forEach((island, i) => {
+                if (!island.userData.originalY) {
+                    island.userData.originalY = island.position.y;
+                }
+                island.position.y = island.userData.originalY + Math.sin(Date.now() * 0.002 + i) * 0.2;
+            });
+            
+            particles.rotation.y += 0.0002;
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // ========== RESIZE ==========
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        console.log('✅ 3D Portfolio Ready!');
+    </script>
 </body>
-</html>
+</html> 
